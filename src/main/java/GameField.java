@@ -14,13 +14,12 @@ public class GameField extends JPanel implements ActionListener {
     private Image dot;
     private Image apple;
 
-    private int[] x = new int[ALL_DOTS];
-    private int[] y = new int[ALL_DOTS];
-    private int appleX, appleX1, appleX2;
-    private int appleY, appleY1, appleY2;
+    private final int[] x = new int[ALL_DOTS];
+    private final int[] y = new int[ALL_DOTS];
+    private int appleX;
+    private int appleY;
 
     private int dots;
-    private Timer timer;
 
     private boolean left = false;
     private boolean right = true;
@@ -40,14 +39,6 @@ public class GameField extends JPanel implements ActionListener {
         Random random = new Random();
         appleX = random.nextInt(20)*DOT_SIZE;//20*20=400 это размерность которую мы указали
         appleY = random.nextInt(20)*DOT_SIZE;//умножаем на дот_сайз чтобы получать координату
-
-        /*Random random1 = new Random();
-        appleX1 = random1.nextInt(20)*DOT_SIZE;
-        appleY1 = random1.nextInt(20)*DOT_SIZE;
-
-        Random random2 = new Random();
-        appleX2 = random2.nextInt(20)*DOT_SIZE;
-        appleY2 = random2.nextInt(20)*DOT_SIZE;*/
     }
 
     public void initGame(){
@@ -56,20 +47,14 @@ public class GameField extends JPanel implements ActionListener {
             y[i] = 48;
             x[i] = 48-i*DOT_SIZE;
         }
-        timer = new Timer(150, this);
+        Timer timer = new Timer(150, this);
         timer.start();
         createApple();
     }
 
     public void checkApple(){
-        if (x[0]==appleX && y[0]==appleY){
+        if (x[0]==appleX&&y[0]==appleY) {
             dots++;
-            //if (x[0]==appleX1 && y[0]==appleY1){
-               // dots++;
-               // if (x[0]==appleX2 && y[0]==appleY2){
-                    //dots++;
-                //}
-            //}
             createApple();
         }
     }
@@ -79,13 +64,11 @@ public class GameField extends JPanel implements ActionListener {
         super.paintComponent(g);
         if (inGame){
             g.drawImage(apple, appleX, appleY, this);
-            //g.drawImage(apple, appleX1, appleY1, this);
-            //g.drawImage(apple, appleX2, appleY2, this);
             for (int i = 0; i < dots; i++) {
                 g.drawImage(dot, x[i], y[i], this);
             }
         }else {
-            String str = "Game over";
+            String str = "Змейка сдохла";
             g.setColor(Color.CYAN);
             g.drawString(str, SIZE/4, SIZE/2);
         }
@@ -93,8 +76,9 @@ public class GameField extends JPanel implements ActionListener {
 
     public void checkCollision(){
         for (int i = dots; i >0; i--) {
-            if (x[0]==x[i] && y[0]==y[i]){
+            if (x[0] == x[i] && y[0] == y[i]) {
                 inGame = false;
+                break;
             }
         }
         if (x[0]>SIZE)
@@ -108,7 +92,7 @@ public class GameField extends JPanel implements ActionListener {
     }
 
     @Override
-    public void actionPerformed(ActionEvent a){
+    public void actionPerformed(ActionEvent e){
         if (inGame){
             checkApple();
             checkCollision();
